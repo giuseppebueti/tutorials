@@ -22,7 +22,7 @@ public class StoredProcedureTest {
 
     @BeforeClass
     public static void init() {
-        factory = Persistence.createEntityManagerFactory("jpa-db");
+        factory = Persistence.createEntityManagerFactory("jpa-in-memory-db"); //or jpa-db for MySql
         entityManager = factory.createEntityManager();
     }
 
