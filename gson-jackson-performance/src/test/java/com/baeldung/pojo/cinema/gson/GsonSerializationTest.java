@@ -1,8 +1,10 @@
 package com.baeldung.pojo.cinema.gson;
 
 import com.baeldung.pojo.cinema.ActorGson;
+import com.baeldung.pojo.cinema.ActorJackson;
+import com.baeldung.pojo.cinema.MovieGson;
+import com.baeldung.pojo.cinema.MovieJackson;
 import com.baeldung.serializer.ActorGsonSerializer;
-import com.baeldung.pojo.cinema.Movie;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.junit.Assert;
@@ -17,6 +19,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
+import static com.baeldung.pojo.cinema.util.JsonUtil.getDateFormat;
+
 /**
  * Created by giuse on 06/07/2016.
  */
@@ -25,36 +29,16 @@ public class GsonSerializationTest {
     //Java To JSON
 
     private Gson gson=null;
-    private Movie movie=null;
-    private SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
 
     @Before
     public void init() throws ParseException {
         gson = new Gson();
-        movie = createMovie();
     }
-
-
 
     @Test
     public void testJavaToJsonSimple() throws ParseException, IOException, URISyntaxException {
-
-        String serializedMovie = gson.toJson(movie);
+        String serializedMovie = gson.toJson(createMovie());
         String fileData = new String(Files.readAllBytes(Paths.get(this.getClass().getResource("./../apocalyptoSimple.json").toURI())));
-        Assert.assertEquals("Comparing json file with serialized content ...",fileData,serializedMovie);
-    }
-
-    @Test
-    public void testJavaToJsonCustomSerializer() throws URISyntaxException, IOException {
-        gson=new GsonBuilder()
-                .setPrettyPrinting()
-                .setDateFormat("dd-MM-yyyy")
-                .registerTypeAdapter(ActorGson.class,new ActorGsonSerializer())
-                .create();
-
-        String serializedMovie = gson.toJson(movie);
-
-        String fileData = new String(Files.readAllBytes(Paths.get(this.getClass().getResource("./../apocalyptoCustomSerializer.json").toURI())));
         Assert.assertEquals("Comparing json file with serialized content ...",fileData,serializedMovie);
     }
 
@@ -64,37 +48,22 @@ public class GsonSerializationTest {
                 .setPrettyPrinting()
                 .excludeFieldsWithoutExposeAnnotation()
                 .serializeNulls()
-                .setDateFormat("dd-MM-yyyy")
                 .registerTypeAdapter(ActorGson.class,new ActorGsonSerializer())
                 .create();
 
-         movie = createMovieWithNullValue();
-
-         String serializedMovie = gson.toJson(movie);
+         String serializedMovie = gson.toJson(createMovieWithNullValue());
          String fileData = new String(Files.readAllBytes(Paths.get(this.getClass().getResource("./../apocalyptoCustomSerializer2.json").toURI())));
          Assert.assertEquals("Comparing json file with serialized content ...",fileData,serializedMovie);
     }
 
-    private Movie createMovie() throws ParseException {
-        ActorGson rudyYoungblood = new ActorGson("nm2199632","Rudy Youngblood",sdf.parse("09-21-1982"),"American",
-                Arrays.asList("Apocalypto","Beatdown","Wind Walkers") );
-        ActorGson daliaHernandez = new ActorGson("nm2199664","Dalia Hernandez",sdf.parse("08-14-1985"),"Mexican",
-                Arrays.asList("Apocalypto","Capadocia") );
-
-        Movie movie = new Movie("Apocalypto","2006","2008","Mel Gibson",
-                Arrays.asList(rudyYoungblood,daliaHernandez),"tt0472043");
-        return movie;
+    private MovieGson createMovieWithNullValue() throws ParseException {
+        ActorGson rudyYoungblood = new ActorGson("nm2199632",getDateFormat().parse("09-21-1982"), Arrays.asList("Apocalypto","Beatdown","Wind Walkers") );
+        return  new MovieGson(null, "Mel Gibson", Arrays.asList(rudyYoungblood));
     }
 
-    private Movie createMovieWithNullValue() throws ParseException {
-        ActorGson rudyYoungblood = new ActorGson("nm2199632",null,sdf.parse("09-21-1982"),"American",
-                Arrays.asList("Apocalypto","Beatdown","Wind Walkers") );
-        ActorGson daliaHernandez = new ActorGson("nm2199664","Dalia Hernandez",null,"Mexican",
-                Arrays.asList("Apocalypto","Capadocia") );
-
-        Movie movie = new Movie("Apocalypto","2006","2008","Mel Gibson",
-                Arrays.asList(rudyYoungblood,daliaHernandez),"tt0472043");
-        return movie;
+    private MovieGson createMovie() throws ParseException {
+        ActorGson rudyYoungblood = new ActorGson("nm2199632",getDateFormat().parse("21-09-1982"),Arrays.asList("Apocalypto","Beatdown","Wind Walkers") );
+        return new MovieGson("tt0472043","Mel Gibson",Arrays.asList(rudyYoungblood));
     }
 
 

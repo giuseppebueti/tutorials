@@ -1,24 +1,11 @@
 {
-  "title": "Apocalypto",
-  "year": "2006",
-  "released": "2008",
+  "imdbId": null,
   "actors": [
     {
-      "imdbID": "nm2199632",
-      "name": null,
-      "dateOfBirth": 401407200000,
-      "nationality": "American",
+      "imdbId": "nm2199632",
+      "dateOfBirth": "21-09-1982",
       "N° Film: ": 3,
-      "filmography": "Apocalypto - Beatdown - Wind Walkers"
-    },
-    {
-      "imdbID": "nm2199664",
-      "name": "Dalia Hernandez",
-      "dateOfBirth": null,
-      "nationality": "Mexican",
-      "N° Film: ": 2,
-      "filmography": "Apocalypto - Capadocia"
+      "filmography": "Apocalypto-Beatdown-Wind Walkers"
     }
-  ],
-  "imdbID": "tt0472043"
+  ]
 }

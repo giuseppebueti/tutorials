@@ -24,13 +24,10 @@ public class ActorJacksonSerializer extends StdSerializer<ActorJackson> {
     public void serialize(ActorJackson actor, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
 
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeStringField("imdbID", actor.getImdbId());
-        jsonGenerator.writeStringField("name", actor.getName());
-        jsonGenerator.writeObjectField("dateOfBirth", actor.getDateOfBirth() != null ? actor.getDateOfBirth().getTime() : null);
-        jsonGenerator.writeStringField("nationality", actor.getNationality());
+        jsonGenerator.writeStringField("imdbId", actor.getImdbId());
+        jsonGenerator.writeObjectField("dateOfBirth", actor.getDateOfBirth() != null ? sdf.format(actor.getDateOfBirth()) : null);
         jsonGenerator.writeNumberField("N° Film: ",  actor.getFilmography()  != null ?  actor.getFilmography().size() : null);
-        jsonGenerator.writeStringField("filmography", actor.getFilmography().stream().collect(Collectors.joining(" - ")));
-
+        jsonGenerator.writeStringField("filmography", actor.getFilmography().stream().collect(Collectors.joining("-")));
         jsonGenerator.writeEndObject();
     }
 }

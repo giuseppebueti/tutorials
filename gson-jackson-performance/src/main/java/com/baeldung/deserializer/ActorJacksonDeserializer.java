@@ -8,6 +8,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +19,7 @@ import java.util.List;
  */
 public class ActorJacksonDeserializer extends StdDeserializer<ActorJackson> {
 
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     public ActorJacksonDeserializer(Class<ActorJackson> vc) {
         super(vc);
@@ -25,12 +29,16 @@ public class ActorJacksonDeserializer extends StdDeserializer<ActorJackson> {
     public ActorJackson deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-        String imdbId = node.get("imdbID").asText();
-        String name = node.get("name").asText();
-        String nationality = node.get("nationality").asText();
-        Date birth = new Date(node.get("dateOfBirth").asLong());
-        List<String> filmography = node.findValuesAsText("filmography");
+        String imdbId = node.get("imdbId").asText();
+        Date  dateOfBirth = null;
+        try {
+            dateOfBirth = simpleDateFormat.parse(node.get("dateOfBirth").asText());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
-        return new ActorJackson(imdbId, name, birth, nationality, filmography);
+        List<String> filmography = Arrays.asList(node.get("filmography").asText().split(";",-1));
+
+        return new ActorJackson(imdbId, dateOfBirth, filmography);
     }
 }
