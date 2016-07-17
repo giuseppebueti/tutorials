@@ -12,6 +12,7 @@ public class MovieJackson {
 
     private String imdbId;
 
+    @JsonIgnore
     private String director;
 
     private List<ActorJackson> actors;

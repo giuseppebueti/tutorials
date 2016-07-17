@@ -19,6 +19,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.IllegalFormatCodePointException;
+
+import static com.baeldung.pojo.cinema.util.JsonUtil.getDateFormat;
 
 /**
  * Created by giuse on 06/07/2016.
@@ -28,20 +31,17 @@ public class JacksonSerializationTest {
     //Java To JSON
 
     private static ObjectMapper mapper = null;
-    private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-    private MovieJackson movie;
 
     @Before
     public void init() throws ParseException {
         mapper = new ObjectMapper();
-        movie = createMovie();
     }
 
 
     @Test
     public void testJavaToJsonSerializer() throws ParseException, URISyntaxException, IOException {
 
-        String jsonResult = mapper.setDateFormat(DateFormat.getDateTimeInstance()).writeValueAsString(movie);
+        String jsonResult = mapper.setDateFormat(getDateFormat()).writeValueAsString(createMovie());
         String fileData = new String(Files.readAllBytes(Paths.get(this.getClass().getResource("./../apocalyptoSimple.json").toURI())));
         Assert.assertNotEquals("Comparing json file with serialized content ...",fileData,jsonResult);
     }
@@ -49,31 +49,25 @@ public class JacksonSerializationTest {
 
     @Test
     public void testJavaToJsonExposedAndNullValue() throws ParseException, URISyntaxException, IOException {
-        SimpleModule module = new SimpleModule("SampleModule");
+        SimpleModule module = new SimpleModule();
         module.addSerializer(new ActorJacksonSerializer(ActorJackson.class));
 
-        String jsonResult = null;
-        try {
-            jsonResult = mapper
-                    .registerModule(module)
-                    .writer(new DefaultPrettyPrinter())
-                    .writeValueAsString(createMovieWithNullValue());
-        }
-        catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        String jsonResult = mapper
+                .registerModule(module)
+                .writer(new DefaultPrettyPrinter())
+                .writeValueAsString(createMovieWithNullValue());
 
         String fileData = new String(Files.readAllBytes(Paths.get(this.getClass().getResource("./../apocalyptoCustomSerializer2.json").toURI())));
         Assert.assertEquals("Comparing json file with serialized content ...",fileData,jsonResult);
     }
 
     private MovieJackson createMovieWithNullValue() throws ParseException {
-        ActorJackson rudyYoungblood = new ActorJackson("nm2199632",sdf.parse("21-09-1982"), Arrays.asList("Apocalypto","Beatdown","Wind Walkers") );
+        ActorJackson rudyYoungblood = new ActorJackson("nm2199632",getDateFormat().parse("21-09-1982"), Arrays.asList("Apocalypto","Beatdown","Wind Walkers") );
         return  new MovieJackson(null, "Mel Gibson", Arrays.asList(rudyYoungblood));
     }
 
     private MovieJackson createMovie() throws ParseException {
-        ActorJackson rudyYoungblood = new ActorJackson("nm2199632",sdf.parse("21-09-1982"),Arrays.asList("Apocalypto","Beatdown","Wind Walkers") );
+        ActorJackson rudyYoungblood = new ActorJackson("nm2199632",getDateFormat().parse("21-09-1982"),Arrays.asList("Apocalypto","Beatdown","Wind Walkers") );
         return new MovieJackson("tt0472043","Mel Gibson",Arrays.asList(rudyYoungblood));
     }
 

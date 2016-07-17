@@ -57,7 +57,7 @@ public class GsonSerializationTest {
     }
 
     private MovieGson createMovieWithNullValue() throws ParseException {
-        ActorGson rudyYoungblood = new ActorGson("nm2199632",getDateFormat().parse("09-21-1982"), Arrays.asList("Apocalypto","Beatdown","Wind Walkers") );
+        ActorGson rudyYoungblood = new ActorGson("nm2199632",getDateFormat().parse("21-09-1982"), Arrays.asList("Apocalypto","Beatdown","Wind Walkers") );
         return  new MovieGson(null, "Mel Gibson", Arrays.asList(rudyYoungblood));
     }
 

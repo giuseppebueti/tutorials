@@ -2,8 +2,8 @@
   "imdbId": null,
   "actors": [
     {
-      "imdbId": "nm2199632",
-      "dateOfBirth": "21-09-1982",
+      "IMDB Code": "nm2199632",
+      "Date Of Birth": "21-09-1982",
       "N° Film: ": 3,
       "filmography": "Apocalypto-Beatdown-Wind Walkers"
     }

@@ -7,6 +7,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,20 +16,19 @@ import java.util.stream.Collectors;
  */
 public class ActorGsonSerializer implements JsonSerializer<ActorGson> {
 
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
     @Override
     public JsonElement serialize(ActorGson actor, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject actorJsonObj = new JsonObject();
-        actorJsonObj.addProperty("imdbID", actor.getImdbId());
-        actorJsonObj.addProperty("dateOfBirth", actor.getDateOfBirth() != null ? actor.getDateOfBirth().getTime() : null);
+        actorJsonObj.addProperty("IMDB Code", actor.getImdbId());
+        actorJsonObj.addProperty("Date Of Birth", actor.getDateOfBirth() != null ? sdf.format(actor.getDateOfBirth()) : null);
         actorJsonObj.addProperty("N° Film: ",  actor.getFilmography()  != null ?  actor.getFilmography().size() : null);
         actorJsonObj.addProperty("filmography", actor.getFilmography() != null ? convertFilmography(actor.getFilmography()) : null);
         return actorJsonObj;
     }
 
     private String convertFilmography(List<String> filmography) {
-        return filmography.stream().collect(Collectors.joining(" - "));
+        return filmography.stream().collect(Collectors.joining("-"));
     }
-
-
 }
